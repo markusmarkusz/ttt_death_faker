@@ -5,7 +5,7 @@ if SERVER then
     function DeathFaker:GetRandomWeapon()
         local weptable = {}
         for k,v in pairs(weapons.GetList()) do
-            if not "weapon_ghost_base" and (v.Kind == WEAPON_HEAVY or v.Kind == WEAPON_PISTOL) then -- Don't use SpecDM Weapons. They're not translated.
+            if (v.Kind == WEAPON_HEAVY or v.Kind == WEAPON_PISTOL) and v.Base ~= "weapon_base_ghost" then -- Don't use SpecDM Weapons. They're not translated.
                 table.insert(weptable, v.ClassName)
             end
         end
@@ -53,7 +53,7 @@ if SERVER then
 
         rag.dmgtype = dmgtype -- Add our Damage Type.
         rag.was_headshot = dmgtype == DMG_BULLET -- Bullet Damage is always a headshot.
-        rag.wep = dmgtype == DMG_BULLET and DeathFaker:GetRandomWeapon() or "" -- Give it a random weapon if needed
+        rag.dmgwep = dmgtype == DMG_BULLET and DeathFaker:GetRandomWeapon() or "" -- Give it a random weapon if needed
 
         rag:SetNWString("ragowner_sid", ply:SteamID()) -- Need this to "fix" something.
 
