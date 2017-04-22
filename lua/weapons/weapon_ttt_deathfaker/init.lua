@@ -11,7 +11,7 @@ local function GetRandomWeapon()
         local weptable = {}
         local i = 0
         for k,v in ipairs(weapons.GetList()) do
-            if (v.Kind == WEAPON_HEAVY or v.Kind == WEAPON_PISTOL) and v.Base ~= "weapon_base_ghost" then -- Don't use SpecDM Weapons. They're not translated.
+            if (v.Kind == WEAPON_HEAVY or v.Kind == WEAPON_PISTOL) and v.Base ~= "weapon_ghost_base" then -- Don't use SpecDM Weapons. They're not translated.
                 table.insert(weptable, v.ClassName)
                 i = i + 1
             end
