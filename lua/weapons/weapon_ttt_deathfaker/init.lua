@@ -3,6 +3,15 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+CreateConVar("ttt_df_allow_role_change", "0")
+cvars.AddChangeCallback("ttt_df_allow_role_change", function(cvar, old, new)
+    SetGlobalBool("deathfaker_allow_role_change", tobool(new))
+end)
+
+function SWEP:Equip(ply)
+    self:SetRole(ply:GetRole())
+end
+
 -- Get a random weapon!
 local WeaponTable
 local WeaponTableCount = 0
@@ -56,9 +65,10 @@ function SWEP:FakeDeath(ply)
     local rag = CORPSE.Create(ply, ply, DamageInfo()) -- Dummy damage info.
 
     -- We have to modify some things on our ragdoll.
-    CORPSE.SetCredits(rag, 0)
+    CORPSE.SetCredits(rag, 0) -- No Credits
 
     local dmgtype = self:GetDMGType()
+    rag.was_role = self:GetRole()
     rag.dmgtype = dmgtype -- Add our Damage Type.
     rag.was_headshot = dmgtype == DMG_BULLET -- Bullet Damage is always a headshot.
     rag.dmgwep = dmgtype == DMG_BULLET and GetRandomWeapon() or "" -- Give it a random weapon if needed
@@ -68,6 +78,7 @@ function SWEP:FakeDeath(ply)
     ply:SetNWEntity("fakerag", rag)
 
     util.StartBleeding(rag, math.Rand(1, ply:GetMaxHealth()), 15) -- Make blood around the ragdoll
+    hook.Call("FakedDeath", nil, ply, self:GetRole()) -- A hook that is useful for example for DamageLog Addons
 end
 
 hook.Add("TTTPrepareRound", "DeathFaker.RemoveRagdolls", RemoveRagdolls) -- Remove them on preparing

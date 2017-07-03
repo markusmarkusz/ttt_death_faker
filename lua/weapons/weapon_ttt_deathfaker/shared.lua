@@ -22,6 +22,10 @@ function SWEP:SetupDataTables()
     self:NetworkVar("Float", 0, "NextDMGChange")
     self:NetworkVar("Int", 0, "DMGType")
     self:NetworkVar("Int", 1, "LastIndex")
+
+    self:NetworkVar("Int", 2, "Role")
+    self:NetworkVar("Int", 3, "LastRolesIndex")
+
     self.BaseClass.SetupDataTables(self)
 end
 
@@ -29,6 +33,10 @@ function SWEP:Initialize()
     self:SetDMGType(DMG_BULLET)
     self:SetNextDMGChange(0)
     self:SetLastIndex(0)
+
+    self:SetLastRolesIndex(0)
+    self:SetRole(ROLE_INNOCENT)
+
     self.BaseClass.Initialize(self)
 end
 
@@ -37,9 +45,34 @@ function SWEP:PrimaryAttack()
     self:BodyDrop()
 end
 
+local Roles = {
+    {ROLE_INNOCENT, "innocent", Color(20, 250, 20)}, 
+    {ROLE_TRAITOR, "traitor", Color(250, 20, 20)}
+}
+local red = Color(200, 20, 20)
+local white = Color(250, 250, 250)
 function SWEP:SecondaryAttack()
-    self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
-    self:BodyDrop()
+    if not GetGlobalBool("deathfaker_allow_role_change") then
+        self:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
+        self:BodyDrop()
+        return
+    end
+
+    self:SetNextSecondaryFire(CurTime() + 1)
+
+    local owner = self:GetOwner()
+    local index, tab = next(Roles, self:GetLastRolesIndex())
+
+    if index == nil then
+        index, tab = next(Roles, 0)
+    end
+
+    self:SetLastRolesIndex(index)
+    self:SetRole(tab[1])
+
+    if CLIENT then
+        chat.AddText(red, "[Death Faker] ", white, "Your body's role will be ", tab[3], LANG.GetTranslation(tab[2]))
+    end
 end
 
 local throwsound = Sound("physics/body/body_medium_impact_soft2.wav")

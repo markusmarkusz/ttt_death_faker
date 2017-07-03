@@ -39,9 +39,9 @@ hook.Add("TTTScoreGroup", "DeathFaker.Group", DeathFakerScore)
 -- Just a "fix" for the player avatar. TTT kills search.owner
 hook.Add("TTTBodySearchEquipment", "DeathFaker.TTTBodySearchFix", function(search, eq)
     local rag = Entity(search.eidx)
-    local plysid = rag:GetNWString("ragowner_sid", nil)
+    local plysid = rag:GetNWString("ragowner_sid", "")
 
-    if plysid then
+    if plysid ~= "" then
         local ply = player.GetBySteamID(plysid)
         search.owner = ply
     end
