@@ -11,8 +11,7 @@ This death faker works even if you are using addons like the Spectator Deathmatc
 It should work with almost every addon.
 If you encounter any problems with some addons, contact me and I'll see what I can do to fix the problems.
 
-Steam Workshop: http://steamcommunity.com/sharedfiles/filedetails/?id=785423990  
-Facepunch Thread: https://facepunch.com/showthread.php?t=1538790
+Steam Workshop: http://steamcommunity.com/sharedfiles/filedetails/?id=785423990
 
 ## ConVars
 #### ttt_df_allow_role_change
